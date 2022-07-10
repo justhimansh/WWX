@@ -1,0 +1,133 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block main %}
+<h1 style="padding-bottom: 20px">Let's get you started</h1>
+    <form action="/register" method="post">
+        <!-- USERNAME -->
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="username" name="username" placeholder="Username" type="text">
+        </div>
+        <!-- PASSWORD -->
+        <div class="mb-3">
+            <i class="fa-solid fa-circle-info info fa-lg" id="icon" style="float:right; position:absolute"></i>
+            <input class="form-control mx-auto w-auto" id="password" name="password" placeholder="Password" type="password" onkeyup="isGood(this.value)">
+            <div class="bar">
+                <div id="password-parameter" style="display:none">
+                    <small class="help-block" id="password-text"></small>
+                    <div class="conditions">
+                        <ul>
+                          <li>Uppercase Letters</li>
+                          <li>Lowercase Letters</li>
+                          <li>Numbers</li>
+                          <li>Special Character</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <div id="match">
+
+            </div>
+            <div id="confirm">
+                <i class="fa-solid fa-check-double cc" id="tick" style="float:right; position:absolute"></i>
+                <input class="form-control mx-auto w-auto" id="checker" name="confirmation" placeholder="Please re-enter password" type="password" onkeyup="doMatch(this.value)">
+            </div>
+        </div>
+        <button class="btn btn-primary" type="submit">Register!</button>
+    </form>
+
+    <script>
+        // Initializing all the elements needed to run script functions :)
+        const openDiv = document.getElementById("password-parameter");
+        const box = document.getElementById("icon");
+        const password_strength = document.getElementById("password-text");
+        const reenter = document.getElementById("checker");
+        const match = document.getElementById("match");
+        const tick = document.getElementById("tick");
+
+        const checkerDiv = document.getElementById("confirm");
+        
+        //Making a variable to hold both password inputs
+        var initial_password;
+        var confirm_password;
+
+        reenter.onclick = function () {
+            if (openDiv.style.display !== "none") {
+                openDiv.style.display = "none";
+            } 
+        }
+
+        box.onclick = function () {
+            if (openDiv.style.display !== "none") {
+                openDiv.style.display = "none";
+            } else {
+                openDiv.style.display = "inline-block"
+                openDiv.style.float = "middle"
+            }
+        };
+
+        function doMatch(checker){
+            if(initial_password === checker){
+                
+               // match.innerHTML = "<i class='fa-solid fa-check-double cc' id='icon' style='float:right; position:absolute color:green'></i>"
+                console.log("YES");
+                tick.style.color = "green";
+            } else {
+                tick.style.color = "#212529"
+                console.log("no");
+            }
+        }
+
+        function isGood(password){
+            if (password.length == 0){
+                password_strength.innerHTML = "";
+                return;
+            }
+            
+            initial_password = password;
+
+            var regex = new Array();
+            regex.push("[A-Z]"); //Uppercase Alphabet.
+            regex.push("[a-z]"); //Lowercase Alphabet.
+            regex.push("[0-9]"); //Digit.
+            regex.push("[$@$!%*#?&]"); //Special Character.
+
+            var passed = 0;
+
+            for (var i = 0; i < regex.length; i++) {
+                if (new RegExp(regex[i]).test(password)) {
+                    passed++;
+                    if(passed >= regex.length){
+                        box.style.color = "green";
+                    } else {
+                        box.style.color = "#212529"
+                    }
+                }
+            }
+
+            var strength = "";
+                switch (passed) {
+                    case 0:
+                    case 1:
+                    case 2:
+                    strength = "<small class='progress-bar bg-danger' style='width: 40%'>Weak</small>";
+                    break;
+                    case 3:
+                    strength = "<small class='progress-bar bg-warning' style='width: 60%'>Medium</small>";
+                    break;
+                    case 4:
+                    strength = "<small class='progress-bar bg-success' style='width: 100%'>Strong</small>";
+                    break;
+
+                }
+                password_strength.innerHTML = strength;
+
+                
+    }
+    </script>
+{% endblock %}

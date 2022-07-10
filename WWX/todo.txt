@@ -1,0 +1,10 @@
+fix button and make conditions pop out when clicked
+
+add match when reenter password
+
+export API_KEY=value
+
+
+fix up the confirmation
+get rid of not goiing away bug
+cleanup code
